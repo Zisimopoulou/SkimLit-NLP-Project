@@ -14,7 +14,7 @@ import matplotlib.pyplot as plt
 from tensorflow.keras import layers
 from tensorflow.keras.layers import TextVectorization
 
-def load_and_preprocess_pubmed_data():
+def load_and_preprocess_pubmed_data(data_dir):
     """
     Clone the PubMed RCT GitHub repository, load and preprocess the data,
     and return train, validation, and test datasets.
