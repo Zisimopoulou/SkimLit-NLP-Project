@@ -42,7 +42,7 @@ def load_and_preprocess_pubmed_data():
     val_sentences = val_df["text"].tolist()
     test_sentences = test_df["text"].tolist()
 
-    return train_sentences, val_sentences, test_sentences
+    return train_df, val_df, test_df, train_sentences, val_sentences, test_sentences
 
 def encode_labels_one_hot(encoder, labels):
     one_hot_encoded_labels = encoder.transform(labels.reshape(-1, 1))
