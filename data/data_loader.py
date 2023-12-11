@@ -14,7 +14,7 @@ import matplotlib.pyplot as plt
 from tensorflow.keras import layers
 from tensorflow.keras.layers import TextVectorization
 
-def load_and_preprocess_pubmed_data(data_dir):
+def load_and_preprocess_pubmed_data():
     """
     Clone the PubMed RCT GitHub repository, load and preprocess the data,
     and return train, validation, and test datasets.
@@ -27,14 +27,13 @@ def load_and_preprocess_pubmed_data(data_dir):
     - val_sentences (list): List of sentences in the validation set.
     - test_sentences (list): List of sentences in the test set.
     """
-    git clone https://github.com/Franck-Dernoncourt/pubmed-rct.git
+    data_dir = os.path.join(data_dir, "pubmed-rct", "PubMed_20k_RCT_numbers_replaced_with_at_sign")
 
-    data_dir = f"{data_dir}/pubmed-rct/PubMed_20k_RCT_numbers_replaced_with_at_sign/"
-
-    train_samples = preprocess_text_with_line_numbers(data_dir + "train.txt")
-    val_samples = preprocess_text_with_line_numbers(data_dir + "dev.txt")
-    test_samples = preprocess_text_with_line_numbers(data_dir + "test.txt")
-
+    # Preprocess and load data
+    train_samples = preprocess_text_with_line_numbers(os.path.join(data_dir, "train.txt"))
+    val_samples = preprocess_text_with_line_numbers(os.path.join(data_dir, "dev.txt"))
+    test_samples = preprocess_text_with_line_numbers(os.path.join(data_dir, "test.txt"))
+    
     train_df = pd.DataFrame(train_samples)
     val_df = pd.DataFrame(val_samples)
     test_df = pd.DataFrame(test_samples)
