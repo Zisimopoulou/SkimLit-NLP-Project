@@ -27,24 +27,18 @@ def load_and_preprocess_pubmed_data(data_dir):
     - val_sentences (list): List of sentences in the validation set.
     - test_sentences (list): List of sentences in the test set.
     """
-    # Clone the GitHub repository
-    !git clone https://github.com/Franck-Dernoncourt/pubmed-rct.git
-    !ls pubmed-rct
+    git clone https://github.com/Franck-Dernoncourt/pubmed-rct.git
 
-    # Define the data directory path
     data_dir = f"{data_dir}/pubmed-rct/PubMed_20k_RCT_numbers_replaced_with_at_sign/"
 
-    # Preprocess and load data
     train_samples = preprocess_text_with_line_numbers(data_dir + "train.txt")
     val_samples = preprocess_text_with_line_numbers(data_dir + "dev.txt")
     test_samples = preprocess_text_with_line_numbers(data_dir + "test.txt")
 
-    # Create DataFrames
     train_df = pd.DataFrame(train_samples)
     val_df = pd.DataFrame(val_samples)
     test_df = pd.DataFrame(test_samples)
 
-    # Extract sentences
     train_sentences = train_df["text"].tolist()
     val_sentences = val_df["text"].tolist()
     test_sentences = test_df["text"].tolist()
