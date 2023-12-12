@@ -35,3 +35,20 @@ def create_and_compile_ga_model(max_tokens, num_classes):
     )
 
     return model
+
+def create_and_compile_text_classification_model(tf_hub_embedding_layer, num_classes):
+    inputs = layers.Input(shape=[], dtype=tf.string)
+    pretrained_embedding = tf_hub_embedding_layer(inputs)
+    x = layers.Dense(128, activation="relu")(pretrained_embedding)
+    outputs = layers.Dense(num_classes, activation="softmax")(x)
+
+    model = tf.keras.Model(inputs=inputs, outputs=outputs)
+
+    # Compile the model
+    model.compile(
+        loss="categorical_crossentropy",
+        optimizer=tf.keras.optimizers.Adam(),
+        metrics=["accuracy"]
+    )
+
+    return model
