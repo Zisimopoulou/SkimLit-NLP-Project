@@ -14,7 +14,7 @@ import matplotlib.pyplot as plt
 from tensorflow.keras import layers
 from tensorflow.keras.layers import TextVectorization
 
-def load_and_preprocess_pubmed_data(train_samples, val_samples, test_samples):    
+def load_and_preprocess_pubmed_data(data_dir):    
     data_dir = os.path.join(data_dir, "pubmed-rct", "PubMed_20k_RCT_numbers_replaced_with_at_sign")
 
     train_samples = preprocess_text_with_line_numbers(os.path.join(data_dir, "train.txt"))
