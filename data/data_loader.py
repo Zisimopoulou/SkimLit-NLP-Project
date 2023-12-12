@@ -37,7 +37,7 @@ def load_and_preprocess_pubmed_data(data_dir):
     train_df = pd.DataFrame(train_samples)
     val_df = pd.DataFrame(val_samples)
     test_df = pd.DataFrame(test_samples)
-
+    print(train_df.columns)
     train_sentences = train_df["text"].tolist()
     val_sentences = val_df["text"].tolist()
     test_sentences = test_df["text"].tolist()
