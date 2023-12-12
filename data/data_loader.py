@@ -14,30 +14,11 @@ import matplotlib.pyplot as plt
 from tensorflow.keras import layers
 from tensorflow.keras.layers import TextVectorization
 
-def load_and_preprocess_pubmed_data(data_dir):
-    """
-    Clone the PubMed RCT GitHub repository, load and preprocess the data,
-    and return train, validation, and test datasets.
-
-    Args:
-    - data_dir (str): Directory path for the PubMed RCT data.
-
-    Returns:
-    - train_sentences (list): List of sentences in the training set.
-    - val_sentences (list): List of sentences in the validation set.
-    - test_sentences (list): List of sentences in the test set.
-    """
-    data_dir = os.path.join(data_dir, "pubmed-rct", "PubMed_20k_RCT_numbers_replaced_with_at_sign")
-    data_dir = "/kaggle/working/pubmed-rct/PubMed_20k_RCT_numbers_replaced_with_at_sign/"
-    # Preprocess and load data
-    train_samples = preprocess_text_with_line_numbers(data_dir + "train.txt")
-    val_samples = preprocess_text_with_line_numbers(data_dir + "dev.txt")
-    test_samples = preprocess_text_with_line_numbers(data_dir + "test.txt")
-    
+def load_and_preprocess_pubmed_data(train_samples, val_samples, test_samples):    
     train_df = pd.DataFrame(train_samples)
     val_df = pd.DataFrame(val_samples)
     test_df = pd.DataFrame(test_samples)
-    print(train_df.columns)
+
     train_sentences = train_df["text"].tolist()
     val_sentences = val_df["text"].tolist()
     test_sentences = test_df["text"].tolist()
