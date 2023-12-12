@@ -30,9 +30,9 @@ def load_and_preprocess_pubmed_data(data_dir):
     data_dir = os.path.join(data_dir, "pubmed-rct", "PubMed_20k_RCT_numbers_replaced_with_at_sign")
     data_dir = "/kaggle/working/pubmed-rct/PubMed_20k_RCT_numbers_replaced_with_at_sign/"
     # Preprocess and load data
-    train_samples = preprocess_text_with_line_numbers(os.path.join(data_dir, "train.txt"))
-    val_samples = preprocess_text_with_line_numbers(os.path.join(data_dir, "dev.txt"))
-    test_samples = preprocess_text_with_line_numbers(os.path.join(data_dir, "test.txt"))
+    train_samples = preprocess_text_with_line_numbers(data_dir + "train.txt")
+    val_samples = preprocess_text_with_line_numbers(data_dir + "dev.txt")
+    test_samples = preprocess_text_with_line_numbers(data_dir + "test.txt")
     
     train_df = pd.DataFrame(train_samples)
     val_df = pd.DataFrame(val_samples)
