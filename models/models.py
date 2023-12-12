@@ -38,7 +38,7 @@ def create_and_compile_ga_model(max_tokens, num_classes, train_sentences):
 
     return model
 
-def create_and_compile_text_classification_model(tf_hub_embedding_layer, num_classes):
+def create_and_compile_pretrained_embedding_model(tf_hub_embedding_layer, num_classes):
     inputs = layers.Input(shape=[], dtype=tf.string)
     pretrained_embedding = tf_hub_embedding_layer(inputs)
     x = layers.Dense(128, activation="relu")(pretrained_embedding)
