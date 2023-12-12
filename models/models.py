@@ -1,5 +1,7 @@
 import tensorflow as tf
 from sklearn.metrics import accuracy_score, precision_recall_fscore_support
+from tensorflow.keras.layers import TextVectorization
+from tensorflow.keras import layers
 
 def create_and_compile_ga_model(max_tokens, num_classes):
     text_vectorizer = TextVectorization(
