@@ -3,7 +3,7 @@ from sklearn.metrics import accuracy_score, precision_recall_fscore_support
 from tensorflow.keras.layers import TextVectorization
 from tensorflow.keras import layers
 
-def create_and_compile_ga_model(max_tokens, num_classes):
+def create_and_compile_ga_model(max_tokens, num_classes, train_sentences):
     text_vectorizer = TextVectorization(
         max_tokens=max_tokens, output_sequence_length=55
     )
