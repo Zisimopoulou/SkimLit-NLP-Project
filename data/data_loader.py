@@ -78,5 +78,22 @@ def preprocess_text_with_line_numbers(filename):
     else: # if the above conditions aren't fulfilled, the line contains a labelled sentence
       abstract_lines += line
   
-  return abstract_samples
+    return abstract_samples
+
+def perform_one_hot_encoding(train_df, val_df, test_df, target_column="target"):
+    one_hot_encoder = OneHotEncoder(sparse_output=False)
+    train_labels_one_hot = one_hot_encoder.fit_transform(train_df["target"].to_numpy().reshape(-1, 1))
+    val_labels_one_hot = one_hot_encoder.transform(val_df["target"].to_numpy().reshape(-1, 1))
+    test_labels_one_hot = one_hot_encoder.transform(test_df["target"].to_numpy().reshape(-1, 1))
+    return train_labels_one_hot, val_labels_one_hot, test_labels_one_hot
+
+def perform_label_encoding(train_df, val_df, test_df, target_column="target"):
+    label_encoder = LabelEncoder()
+    train_labels_encoded = label_encoder.fit_transform(train_df["target"].to_numpy())
+    val_labels_encoded = label_encoder.transform(val_df["target"].to_numpy())
+    test_labels_encoded =label_encoder.transform(test_df["target"].to_numpy())
+    return train_labels_encoded, val_labels_encoded, test_labels_encoded
+
+
+
 
