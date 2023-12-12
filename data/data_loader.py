@@ -94,6 +94,9 @@ def perform_label_encoding(train_df, val_df, test_df, target_column="target"):
     test_labels_encoded =label_encoder.transform(test_df["target"].to_numpy())
     return train_labels_encoded, val_labels_encoded, test_labels_encoded
 
-
+def create_tf_datasets(sentences, labels_one_hot, batch_size=32):
+    dataset = tf.data.Dataset.from_tensor_slices((sentences, labels_one_hot))
+    dataset = dataset.batch(batch_size).prefetch(tf.data.AUTOTUNE)
+    return dataset
 
 
