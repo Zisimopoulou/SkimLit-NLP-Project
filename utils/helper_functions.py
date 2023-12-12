@@ -286,3 +286,19 @@ def calculate_results(y_true, y_pred):
                   "recall": model_recall,
                   "f1": model_f1}
   return model_results
+
+def train_and_evaluate_model(model, train_dataset, valid_dataset, num_epochs=3):
+    model_history = model.fit(
+        train_dataset,
+        steps_per_epoch=int(0.1 * len(train_dataset)),
+        epochs=num_epochs,
+        validation_data=valid_dataset,
+        validation_steps=int(0.1 * len(valid_dataset)),
+    )
+
+    model.evaluate(valid_dataset)
+
+    model_pred_probs = model.predict(valid_dataset)
+    model_preds = tf.argmax(model_pred_probs, axis=1)
+
+    return model_preds, model_history
