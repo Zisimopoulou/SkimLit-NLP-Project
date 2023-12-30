@@ -305,7 +305,7 @@ def train_and_evaluate_model(model, train_dataset, valid_dataset, num_epochs=3):
 
     return model_preds, model_history
 
-def create_char_embedding_layer(char_vectorizer, embed_dim=25, mask_zero=False, name="char_embed"):
+def create_char_embedding_layer(char_vectorizer, train_chars, embed_dim=25, mask_zero=False, name="char_embed"):
     char_vocab = char_vectorizer.get_vocabulary()
     random_train_chars = random.choice(train_chars)
     vectorized_chars = char_vectorizer([random_train_chars])
