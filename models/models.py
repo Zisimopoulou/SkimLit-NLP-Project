@@ -70,3 +70,28 @@ def build_conv1D_char_embedding_model(char_vectorizer, char_embed, num_classes):
 
     return model
 
+def build_token_char_hybrid_model(token_model, char_vectorizer, char_embed, num_classes):
+    # Token model
+    token_inputs = token_model.input
+    token_output = token_model.output
+
+    # Character model
+    char_inputs = layers.Input(shape=(1,), dtype=tf.string, name="char_input")
+    char_vectors = char_vectorizer(char_inputs)
+    char_embeddings = char_embed(char_vectors)
+    char_bi_lstm = layers.Bidirectional(layers.LSTM(25))(char_embeddings)
+    char_model = tf.keras.Model(inputs=char_inputs, outputs=char_bi_lstm)
+
+    # Concatenate token and character embeddings
+    token_char_concat = layers.Concatenate(name="token_char_hybrid")([token_output, char_model.output])
+
+    # Additional layers 
+    combined_dropout = layers.Dropout(0.5)(token_char_concat)
+    combined_dense = layers.Dense(200, activation="relu")(combined_dropout)
+    final_dropout = layers.Dropout(0.5)(combined_dense)
+    output_layer = layers.Dense(num_classes, activation="softmax")(final_dropout)
+
+    model = tf.keras.Model(inputs=[token_inputs, char_model.input], outputs=output_layer, name="model_4_token_and_char_embeddings")
+    model.compile(loss="categorical_crossentropy", optimizer=tf.keras.optimizers.Adam(), metrics=["accuracy"])
+
+    return model
