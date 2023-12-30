@@ -83,4 +83,10 @@ def create_tf_datasets(sentences, labels_one_hot, batch_size=32):
     dataset = dataset.batch(batch_size).prefetch(tf.data.AUTOTUNE)
     return dataset
 
+def split_chars(text):
+  return " ".join(list(text))
+
+def split_chars_in_sentences(sentences):
+    return [split_chars(sentence) for sentence in sentences]
+
 
