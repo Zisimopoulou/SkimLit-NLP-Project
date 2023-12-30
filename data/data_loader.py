@@ -89,7 +89,7 @@ def split_chars(text):
 def split_chars_in_sentences(sentences):
     return [split_chars(sentence) for sentence in sentences]
 
-def create_char_vectorizer(train_sentences, output_percentile=95):
+def create_char_vectorizer(train_sentences, train_chars, output_percentile=95):
     char_lens = [len(sentence) for sentence in train_sentences]
     output_seq_char_len = int(np.percentile(char_lens, output_percentile))
 
