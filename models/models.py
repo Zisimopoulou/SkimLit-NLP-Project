@@ -54,3 +54,19 @@ def create_and_compile_pretrained_embedding_model(tf_hub_embedding_layer, num_cl
     )
 
     return model
+
+def build_conv1D_char_embedding_model(char_vectorizer, char_embed, num_classes):
+    inputs = layers.Input(shape=(1,), dtype="string")
+    char_vectors = char_vectorizer(inputs)
+    char_embeddings = char_embed(char_vectors)
+    x = layers.Conv1D(64, kernel_size=5, padding="same", activation="relu")(char_embeddings)
+    x = layers.GlobalMaxPool1D()(x)
+    outputs = layers.Dense(num_classes, activation="softmax")(x)
+
+    model = tf.keras.Model(inputs=inputs, outputs=outputs, name="model_3_conv1D_char_embedding")
+    model.compile(loss="categorical_crossentropy",
+                  optimizer=tf.keras.optimizers.Adam(),
+                  metrics=["accuracy"])
+
+    return model
+
