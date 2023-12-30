@@ -89,4 +89,21 @@ def split_chars(text):
 def split_chars_in_sentences(sentences):
     return [split_chars(sentence) for sentence in sentences]
 
+def create_char_vectorizer(train_sentences, output_percentile=95):
+    char_lens = [len(sentence) for sentence in train_sentences]
+    output_seq_char_len = int(np.percentile(char_lens, output_percentile))
+
+    alphabet = string.ascii_lowercase + string.digits + string.punctuation
+    NUM_CHAR_TOKENS = len(alphabet) + 2  # num characters in alphabet + space + OOV token
+
+    # Create TextVectorization layer for character tokenization
+    char_vectorizer = TextVectorization(
+        max_tokens=NUM_CHAR_TOKENS,
+        output_sequence_length=output_seq_char_len,
+        standardize="lower_and_strip_punctuation",
+        name="char_vectorizer"
+    )
+    char_vectorizer.adapt(train_sentences)
+    return char_vectorizer
+
 
