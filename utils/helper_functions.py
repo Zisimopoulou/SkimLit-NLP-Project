@@ -2,6 +2,8 @@
 ### Storing them here so they're easily accessible.
 
 import tensorflow as tf
+import random
+from tensorflow.keras import layers
 
 # Create a function to import an image and resize it to be able to be used with our model
 def load_and_prep_image(filename, img_shape=224, scale=True):
@@ -302,3 +304,19 @@ def train_and_evaluate_model(model, train_dataset, valid_dataset, num_epochs=3):
     model_preds = tf.argmax(model_pred_probs, axis=1)
 
     return model_preds, model_history
+
+def create_char_embedding_layer(char_vectorizer, NUM_CHAR_TOKENS, embed_dim=25, mask_zero=False, name="char_embed"):
+    char_vocab = char_vectorizer.get_vocabulary()
+    random_train_chars = random.choice(train_chars)
+    vectorized_chars = char_vectorizer([random_train_chars])
+    NUM_CHAR_TOKENS = len(alphabet) + 2
+    # Create Embedding layer for character embeddings
+    char_embed = layers.Embedding(
+        input_dim=NUM_CHAR_TOKENS,
+        output_dim=embed_dim,
+        mask_zero=mask_zero,
+        name=name
+    )
+
+    return char_embed
+
