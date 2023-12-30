@@ -106,4 +106,17 @@ def create_char_vectorizer(train_sentences, train_chars, output_percentile=95):
     char_vectorizer.adapt(train_sentences)
     return char_vectorizer
 
+def create_char_token_datasets(sentences, chars, labels_one_hot, batch_size=32, prefetch_buffer=tf.data.AUTOTUNE):
+    train_char_token_data = tf.data.Dataset.from_tensor_slices((sentences, chars))
+    train_char_token_labels = tf.data.Dataset.from_tensor_slices(labels_one_hot)
+    train_char_token_dataset = tf.data.Dataset.zip((train_char_token_data, train_char_token_labels))
+    train_char_token_dataset = train_char_token_dataset.batch(batch_size).prefetch(prefetch_buffer)
+
+    val_char_token_data = tf.data.Dataset.from_tensor_slices((val_sentences, val_chars))
+    val_char_token_labels = tf.data.Dataset.from_tensor_slices(val_labels_one_hot)
+    val_char_token_dataset = tf.data.Dataset.zip((val_char_token_data, val_char_token_labels))
+    val_char_token_dataset = val_char_token_dataset.batch(32).prefetch(tf.data.AUTOTUNE)
+  
+    return train_char_token_dataset, val_char_token_dataset
+
 
