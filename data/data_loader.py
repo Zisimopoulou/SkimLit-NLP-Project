@@ -106,14 +106,6 @@ def create_char_vectorizer(train_sentences, train_chars, output_percentile=95):
     char_vectorizer.adapt(train_sentences)
     return char_vectorizer
 
-def create_char_token_datasets(sentences, chars, labels_one_hot, batch_size=32, prefetch_buffer=tf.data.AUTOTUNE):
-    char_token_data = tf.data.Dataset.from_tensor_slices((sentences, chars))
-    char_token_labels = tf.data.Dataset.from_tensor_slices(labels_one_hot)
-    char_token_dataset = tf.data.Dataset.zip((char_token_data, char_token_labels))
-    char_token_dataset = char_token_dataset.batch(batch_size).prefetch(prefetch_buffer)
-  
-    return dataset
-
 def one_hot_encode_categorical(data_df, column_name, depth):
     return tf.one_hot(data_df[column_name].to_numpy(), depth=depth)
 
