@@ -95,3 +95,42 @@ def build_token_char_hybrid_model(token_model, char_vectorizer, char_embed, num_
     model.compile(loss="categorical_crossentropy", optimizer=tf.keras.optimizers.Adam(), metrics=["accuracy"])
 
     return model
+
+def build_positional_embedding_model(char_vectorizer, char_embed, token_model):
+    char_inputs = layers.Input(shape=(1,), dtype="string", name="char_inputs")
+    char_vectors = char_vectorizer(char_inputs)
+    char_embeddings = char_embed(char_vectors)
+    char_bi_lstm = layers.Bidirectional(layers.LSTM(32))(char_embeddings)
+    char_model = tf.keras.Model(inputs=char_inputs, outputs=char_bi_lstm)
+
+    line_number_inputs = layers.Input(shape=(15,), dtype=tf.int32, name="line_number_input")
+    line_number_output = layers.Dense(32, activation="relu")(line_number_inputs)
+    line_number_model = tf.keras.Model(inputs=line_number_inputs, outputs=line_number_output)
+
+    total_lines_inputs = layers.Input(shape=(20,), dtype=tf.int32, name="total_lines_input")
+    total_lines_output = layers.Dense(32, activation="relu")(total_lines_inputs)
+    total_line_model = tf.keras.Model(inputs=total_lines_inputs, outputs=total_lines_output)
+
+    # Combined embeddings
+    combined_embeddings = layers.Concatenate(name="token_char_hybrid_embedding")([token_model.output, char_model.output])
+    combined_embeddings_dense = layers.Dense(256, activation="relu")(combined_embeddings)
+    combined_embeddings_dropout = layers.Dropout(0.5)(combined_embeddings_dense)
+
+    # Combined with positional embeddings
+    positional_embeddings = layers.Concatenate(name="token_char_positional_embedding")([line_number_model.output,
+                                                                                        total_line_model.output,
+                                                                                        combined_embeddings_dropout])
+
+    output_layer = layers.Dense(5, activation="softmax", name="output_layer")(positional_embeddings)
+
+    model = tf.keras.Model(inputs=[line_number_model.input,
+                                    total_line_model.input,
+                                    token_model.input,
+                                    char_model.input],
+                           outputs=output_layer)
+    model.compile(loss=tf.keras.losses.CategoricalCrossentropy(label_smoothing=0.2),
+                  optimizer=tf.keras.optimizers.Adam(),
+                  metrics=["accuracy"])
+
+    return model
+
