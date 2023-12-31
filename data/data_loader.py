@@ -112,7 +112,24 @@ def create_char_token_datasets(sentences, chars, labels_one_hot, batch_size=32, 
     char_token_dataset = tf.data.Dataset.zip((char_token_data, char_token_labels))
     char_token_dataset = char_token_dataset.batch(batch_size).prefetch(prefetch_buffer)
   
-    return char_token_dataset
+    return dataset
 
 def one_hot_encode_categorical(data_df, column_name, depth)
     return tf.one_hot(data_df[column_name].to_numpy(), depth=depth)
+
+def create_char_token_datasets(sentences, chars, labels_one_hot, batch_size=32, prefetch_buffer=tf.data.AUTOTUNE):
+    data = tf.data.Dataset.from_tensor_slices((sentences, chars))
+    labels = tf.data.Dataset.from_tensor_slices(labels_one_hot)
+    dataset = tf.data.Dataset.zip((data, labels))
+    dataset = dataset.batch(batch_size).prefetch(prefetch_buffer)
+  
+    return char_token_dataset
+    
+def create_position_char_token_datasets(line_numbers_one_hot, total_lines_one_hot, sentences, chars, labels_one_hot, batch_size=32, prefetch_buffer=tf.data.AUTOTUNE):
+    data = tf.data.Dataset.from_tensor_slices((line_numbers_one_hot, total_lines_one_hot, sentences, chars))
+    labels = tf.data.Dataset.from_tensor_slices(labels_one_hot)
+    dataset = tf.data.Dataset.zip((data, labels))
+    dataset = dataset.batch(batch_size).prefetch(prefetch_buffer)
+  
+    return dataset
+
