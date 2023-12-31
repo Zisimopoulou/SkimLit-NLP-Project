@@ -114,4 +114,5 @@ def create_char_token_datasets(sentences, chars, labels_one_hot, batch_size=32, 
   
     return char_token_dataset
 
-
+def one_hot_encode_categorical(data_df, column_name, depth)
+    return tf.one_hot(data_df[column_name].to_numpy(), depth=depth)
