@@ -194,6 +194,6 @@ def build_modified_trihybrid_model(tf_hub_embedding_layer, token_model, num_clas
                     optimizer=tf.keras.optimizers.Adam(),
                     metrics=['accuracy'])
 
-    return model, model_checkpoint_callback, early_stopping, reduce_lr
+    return model
 
 
