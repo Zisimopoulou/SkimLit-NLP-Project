@@ -322,7 +322,7 @@ def create_char_embedding_layer(char_vectorizer, train_chars, embed_dim=25, mask
 
     return char_embed
 
-def train_and_evaluate_model_with_callbacks(model, train_dataset, val_dataset, valid_dataset):
+def train_and_evaluate_model_with_callbacks(model, train_dataset, valid_dataset):
     check_filepath = 'best_weights/checkpoint.ckpt'
     
     model_checkpoint_callback = tf.keras.callbacks.ModelCheckpoint(
@@ -351,7 +351,7 @@ def train_and_evaluate_model_with_callbacks(model, train_dataset, val_dataset, v
     history = model.fit(
         train_dataset,
         epochs=50,
-        validation_data=val_dataset,
+        validation_data=valid_dataset,
         callbacks=[early_stopping, model_checkpoint_callback, reduce_lr]
     )
 
