@@ -4,6 +4,7 @@
 import tensorflow as tf
 import random
 from tensorflow.keras import layers
+import string
 
 # Create a function to import an image and resize it to be able to be used with our model
 def load_and_prep_image(filename, img_shape=224, scale=True):
