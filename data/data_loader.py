@@ -115,7 +115,7 @@ def create_char_token_datasets(sentences, chars, labels_one_hot, batch_size=32, 
     dataset = tf.data.Dataset.zip((data, labels))
     dataset = dataset.batch(batch_size).prefetch(prefetch_buffer)
   
-    return char_token_dataset
+    return dataset
     
 def create_position_char_token_datasets(line_numbers_one_hot, total_lines_one_hot, sentences, chars, labels_one_hot, batch_size=32, prefetch_buffer=tf.data.AUTOTUNE):
     data = tf.data.Dataset.from_tensor_slices((line_numbers_one_hot, total_lines_one_hot, sentences, chars))
