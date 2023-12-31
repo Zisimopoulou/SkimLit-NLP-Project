@@ -137,3 +137,63 @@ def build_position_char_token_embedding_model(char_vectorizer, char_embed, token
 
     return model
 
+def build_modified_trihybrid_model(tf_hub_embedding_layer, token_model, num_classes):
+    """
+    Build, compile, and train a model with character, token, and positional embeddings.
+
+    Parameters:
+    - tf_hub_embedding_layer: Pre-trained embedding layer for character inputs.
+    - token_model: Pre-trained token model.
+    - num_classes: Number of output classes.
+    - check_filepath: Filepath for model checkpoint.
+
+    Returns:
+    - Compiled tribrid model.
+    - model_checkpoint_callback: ModelCheckpoint callback for saving best weights.
+    - early_stopping: EarlyStopping callback for early stopping.
+    - reduce_lr: ReduceLROnPlateau callback for learning rate reduction.
+    """
+
+    # Char inputs
+    char_inputs = layers.Input(shape=[], dtype="string", name="char_inputs")
+    char_embeddings = tf_hub_embedding_layer(char_inputs)
+    exp_layer = layers.Lambda(lambda x: tf.expand_dims(x, axis=1))(char_embeddings)
+    char_bi_lstm = layers.Bidirectional(layers.LSTM(32))(exp_layer)
+    char_model = tf.keras.Model(inputs=char_inputs, outputs=char_bi_lstm)
+
+    # Line numbers inputs
+    line_number_inputs = layers.Input(shape=(15,), dtype=tf.int32, name="line_number_input")
+    line_number_output = layers.Dense(32, activation="relu")(line_number_inputs)
+    line_number_model = tf.keras.Model(inputs=line_number_inputs, outputs=line_number_output)
+
+    # Total lines inputs
+    total_lines_inputs = layers.Input(shape=(20,), dtype=tf.int32, name="total_lines_input")
+    total_lines_output = layers.Dense(32, activation="relu")(total_lines_inputs)
+    total_line_model = tf.keras.Model(inputs=total_lines_inputs, outputs=total_lines_output)
+
+    # Combine token and char embeddings into a hybrid embedding
+    combined_embeddings = layers.Concatenate(name="token_char_hybrid_embedding")([token_model.output,
+                                                                                  char_model.output])
+    x = layers.Dense(256, activation="relu")(combined_embeddings)
+    x = layers.Dropout(0.5)(x)
+
+    # Combine positional embeddings with combined token and char embeddings into a tribrid embedding
+    x = layers.Concatenate(name="token_char_positional_embedding")([line_number_model.output,
+                                                                    total_line_model.output,
+                                                                    x])
+
+    output_layer = layers.Dense(num_classes, activation="softmax", name="output_layer")(x)
+
+    model = tf.keras.Model(inputs=[line_number_model.input,
+                                     total_line_model.input,
+                                     token_model.input,
+                                     char_model.input],
+                             outputs=output_layer)
+
+    model.compile(loss=tf.keras.losses.CategoricalCrossentropy(label_smoothing=0.2),
+                    optimizer=tf.keras.optimizers.Adam(),
+                    metrics=['accuracy'])
+
+    return model, model_checkpoint_callback, early_stopping, reduce_lr
+
+
