@@ -309,6 +309,7 @@ def create_char_embedding_layer(char_vectorizer, train_chars, embed_dim=25, mask
     char_vocab = char_vectorizer.get_vocabulary()
     random_train_chars = random.choice(train_chars)
     vectorized_chars = char_vectorizer([random_train_chars])
+    alphabet = string.ascii_lowercase + string.digits + string.punctuation
     NUM_CHAR_TOKENS = len(alphabet) + 2
     # Create Embedding layer for character embeddings
     char_embed = layers.Embedding(
