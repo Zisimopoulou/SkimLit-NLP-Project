@@ -96,17 +96,20 @@ def build_token_char_hybrid_model(token_model, char_vectorizer, char_embed, num_
 
     return model
 
-def build_positional_embedding_model(char_vectorizer, char_embed, token_model):
+def build_position_char_token_embedding_model(char_vectorizer, char_embed, token_model):
+    # Character model
     char_inputs = layers.Input(shape=(1,), dtype="string", name="char_inputs")
     char_vectors = char_vectorizer(char_inputs)
     char_embeddings = char_embed(char_vectors)
     char_bi_lstm = layers.Bidirectional(layers.LSTM(32))(char_embeddings)
     char_model = tf.keras.Model(inputs=char_inputs, outputs=char_bi_lstm)
 
+    # Line number model
     line_number_inputs = layers.Input(shape=(15,), dtype=tf.int32, name="line_number_input")
     line_number_output = layers.Dense(32, activation="relu")(line_number_inputs)
     line_number_model = tf.keras.Model(inputs=line_number_inputs, outputs=line_number_output)
 
+    # Total lines model
     total_lines_inputs = layers.Input(shape=(20,), dtype=tf.int32, name="total_lines_input")
     total_lines_output = layers.Dense(32, activation="relu")(total_lines_inputs)
     total_line_model = tf.keras.Model(inputs=total_lines_inputs, outputs=total_lines_output)
