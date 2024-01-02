@@ -6,6 +6,7 @@ The project involves downloading the PubMed RCT200k dataset, preprocessing the d
 Kaggle was employed to utilize GPU capabilities for enhanced computational power.
 
 The models:
+
     Global Average Model (Model 1):
         Custom token embeddings and Conv1D layers for text classification.
         Used custom functions for model creation, compilation, training, and evaluation.
